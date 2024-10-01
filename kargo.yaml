@@ -1,0 +1,146 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: kargo-demo-05
+spec:
+  promotionPolicies:
+  - stage: test
+    autoPromotionEnabled: true
+  - stage: uat
+    autoPromotionEnabled: true
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: kargo-demo
+  namespace: kargo-demo-05
+spec:
+  subscriptions:
+  - chart:
+      repoURL: https://charts.bitnami.com/bitnami
+      name: nginx # Watch for new versions of this chart
+      semverConstraint: ^14.1.0
+  - image:
+      repoURL: public.ecr.aws/nginx/nginx # Watch for new versions of this image
+      semverConstraint: ^1.24.0
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test
+  namespace: kargo-demo-05
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: kargo-demo
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: argocd-update
+        config:
+          apps:
+          - name: kargo-demo-05-test
+            sources:
+            - repoURL: https://charts.bitnami.com/bitnami
+              chart: nginx
+              helm:
+                images:
+                - repoURL: public.ecr.aws/nginx/nginx
+                  key: image.tag
+                  value: Tag
+              updateTargetRevision: true
+  verification:
+    analysisTemplates:
+    - name: kargo-demo
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: uat
+  namespace: kargo-demo-05
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: kargo-demo
+    sources:
+      stages:
+      - test
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: argocd-update
+        config:
+          apps:
+          - name: kargo-demo-05-uat
+            sources:
+            - repoURL: https://charts.bitnami.com/bitnami
+              chart: nginx
+              helm:
+                images:
+                - repoURL: public.ecr.aws/nginx/nginx
+                  key: image.tag
+                  value: Tag
+              updateTargetRevision: true
+  verification:
+    analysisTemplates:
+    - name: kargo-demo
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: kargo-demo-05
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: kargo-demo
+    sources:
+      stages:
+      - uat
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: argocd-update
+        config:
+          apps:
+          - name: kargo-demo-05-prod
+            sources:
+            - repoURL: https://charts.bitnami.com/bitnami
+              chart: nginx
+              helm:
+                images:
+                - repoURL: public.ecr.aws/nginx/nginx
+                  key: image.tag
+                  value: Tag
+              updateTargetRevision: true
+  verification:
+    analysisTemplates:
+    - name: kargo-demo
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: kargo-demo
+  namespace: kargo-demo-05
+spec:
+  metrics:
+  - name: test
+    provider:
+      job:
+        metadata:
+        spec:
+          backoffLimit: 1
+          template:
+            spec:
+              containers:
+              - name: test
+                image: alpine:latest
+                command:
+                - sleep
+                - "20"
+              restartPolicy: Never
