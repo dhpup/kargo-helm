@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: kargo-demo-05
+  name: kargo-demo
   namespace: argocd
 spec:
   generators:
@@ -12,9 +12,9 @@ spec:
       - stage: prod
   template:
     metadata:
-      name: kargo-demo-05-{{stage}}
+      name: kargo-demo-{{stage}}
       annotations:
-        kargo.akuity.io/authorized-stage: kargo-demo-05:{{stage}}
+        kargo.akuity.io/authorized-stage: kargo-demo:{{stage}}
     spec:
       project: default
       source:
@@ -31,7 +31,7 @@ spec:
             value: ClusterIP
       destination:
         server: https://kubernetes.default.svc
-        namespace: kargo-demo-05-{{stage}}
+        namespace: kargo-demo-{{stage}}
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
