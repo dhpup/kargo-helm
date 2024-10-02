@@ -18,24 +18,17 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://charts.bitnami.com/bitnami
-        chart: nginx
-        # Kargo will update targetRevision to move new charts into each stage
-        targetRevision: placeholder
+        repoURL: https://github.com/dhpup/kargo-helm.git
+        # Kargo will update this branch to move new commits from the helm branch
+        # and/or new images into this stage
+        targetRevision: stage/{{stage}}
+        path: charts/kargo-demo
         helm:
-          parameters:
-          # Kargo will update this value to move new images into each stage
-          - name: image.tag
-            value: placeholder
-          - name: service.type
-            value: ClusterIP
+          valueFiles:
+          - stages/{{stage}}/values.yaml
       destination:
         server: https://kubernetes.default.svc
         namespace: kargo-demo-{{stage}}
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
-  ignoreApplicationDifferences:
-  - jqPathExpressions:
-    - .spec.source.targetRevision
-    - .spec.source.helm.parameters
