@@ -1,7 +1,7 @@
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
-  name: kargo-demo-05
+  name: kargo-demo
 spec:
   promotionPolicies:
   - stage: test
@@ -13,13 +13,13 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
   name: kargo-demo
-  namespace: kargo-demo-05
+  namespace: kargo-demo
 spec:
   subscriptions:
-  - chart:
-      repoURL: https://charts.bitnami.com/bitnami
-      name: nginx # Watch for new versions of this chart
-      semverConstraint: ^14.1.0
+  - git:
+      repoURL: https://github.com/dhpup/kargo-helm.git
+      # Watch this branch instead of main. This is the "trunk" for this example.
+      branch: helm
   - image:
       repoURL: public.ecr.aws/nginx/nginx # Watch for new versions of this image
       semverConstraint: ^1.24.0
@@ -28,7 +28,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: test
-  namespace: kargo-demo-05
+  namespace: kargo-demo
 spec:
   requestedFreight:
   - origin:
@@ -36,22 +36,18 @@ spec:
       name: kargo-demo
     sources:
       direct: true
-  promotionTemplate:
-    spec:
-      steps:
-      - uses: argocd-update
-        config:
-          apps:
-          - name: kargo-demo-05-test
-            sources:
-            - repoURL: https://charts.bitnami.com/bitnami
-              chart: nginx
-              helm:
-                images:
-                - repoURL: public.ecr.aws/nginx/nginx
-                  key: image.tag
-                  value: Tag
-              updateTargetRevision: true
+  promotionMechanisms:
+    gitRepoUpdates:
+    - repoURL: https://github.com/dhpup/kargo-helm.git
+      writeBranch: stage/test # Write to stage-specific branch
+      helm:
+        images:
+        - image: public.ecr.aws/nginx/nginx
+          valuesFilePath: charts/kargo-demo/stages/test/values.yaml
+          key: image.name # Update this key to reference the new image version
+          value: ImageAndTag
+    argoCDAppUpdates:
+    - appName: kargo-demo-test
   verification:
     analysisTemplates:
     - name: kargo-demo
@@ -60,7 +56,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: uat
-  namespace: kargo-demo-05
+  namespace: kargo-demo
 spec:
   requestedFreight:
   - origin:
@@ -69,22 +65,18 @@ spec:
     sources:
       stages:
       - test
-  promotionTemplate:
-    spec:
-      steps:
-      - uses: argocd-update
-        config:
-          apps:
-          - name: kargo-demo-05-uat
-            sources:
-            - repoURL: https://charts.bitnami.com/bitnami
-              chart: nginx
-              helm:
-                images:
-                - repoURL: public.ecr.aws/nginx/nginx
-                  key: image.tag
-                  value: Tag
-              updateTargetRevision: true
+  promotionMechanisms:
+    gitRepoUpdates:
+    - repoURL: https://github.com/dhpup/kargo-helm.git
+      writeBranch: stage/uat # Write to stage-specific branch
+      helm:
+        images:
+        - image: public.ecr.aws/nginx/nginx
+          valuesFilePath: charts/kargo-demo/stages/uat/values.yaml
+          key: image.name # Update this key to reference the new image version
+          value: ImageAndTag
+    argoCDAppUpdates:
+    - appName: kargo-demo-uat
   verification:
     analysisTemplates:
     - name: kargo-demo
@@ -93,7 +85,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: prod
-  namespace: kargo-demo-05
+  namespace: kargo-demo
 spec:
   requestedFreight:
   - origin:
@@ -102,22 +94,18 @@ spec:
     sources:
       stages:
       - uat
-  promotionTemplate:
-    spec:
-      steps:
-      - uses: argocd-update
-        config:
-          apps:
-          - name: kargo-demo-05-prod
-            sources:
-            - repoURL: https://charts.bitnami.com/bitnami
-              chart: nginx
-              helm:
-                images:
-                - repoURL: public.ecr.aws/nginx/nginx
-                  key: image.tag
-                  value: Tag
-              updateTargetRevision: true
+  promotionMechanisms:
+    gitRepoUpdates:
+    - repoURL: https://github.com/dhpup/kargo-helm.git
+      writeBranch: stage/prod # Write to stage-specific branch
+      helm:
+        images:
+        - image: public.ecr.aws/nginx/nginx
+          valuesFilePath: charts/kargo-demo/stages/prod/values.yaml
+          key: image.name # Update this key to reference the new image version
+          value: ImageAndTag
+    argoCDAppUpdates:
+    - appName: kargo-demo-prod
   verification:
     analysisTemplates:
     - name: kargo-demo
@@ -126,7 +114,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
   name: kargo-demo
-  namespace: kargo-demo-05
+  namespace: kargo-demo
 spec:
   metrics:
   - name: test
