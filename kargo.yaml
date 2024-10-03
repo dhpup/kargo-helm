@@ -51,17 +51,17 @@ spec:
       - uses: helm-update-image
         as: update-image
         config:
-          path: ./main/charts/kargo-demo/values.yaml
+          path: ./main/charts/kargo-helm/values.yaml
           images:
           - image: public.ecr.aws/nginx/nginx
             key: image.name
             value: ImageAndTag
       - uses: helm-template
         config:
-          path: ./main/charts/kargo-demo
+          path: ./main/charts/kargo-helm
           releaseName: kargo-demo
           valuesFiles:
-          - ./main/charts/kargo-demo/stages/test/values.yaml
+          - ./main/charts/kargo-helm/stages/test/values.yaml
           outPath: ./manifests
       - uses: git-overwrite
         config:
@@ -116,17 +116,17 @@ spec:
       - uses: helm-update-image
         as: update-image
         config:
-          path: ./main/charts/kargo-demo/values.yaml
+          path: ./main/charts/kargo-helm/values.yaml
           images:
           - image: public.ecr.aws/nginx/nginx
             key: image.name
             value: ImageAndTag
       - uses: helm-template
         config:
-          path: ./main/charts/kargo-demo
+          path: ./main/charts/kargo-helm
           releaseName: kargo-demo
           valuesFiles:
-          - ./main/charts/kargo-demo/stages/uat/values.yaml
+          - ./main/charts/kargo-helm/stages/uat/values.yaml
           outPath: ./manifests
       - uses: git-overwrite
         config:
@@ -181,17 +181,17 @@ spec:
       - uses: helm-update-image
         as: update-image
         config:
-          path: ./main/charts/kargo-demo/values.yaml
+          path: ./main/charts/kargo-helm/values.yaml
           images:
           - image: public.ecr.aws/nginx/nginx
             key: image.name
             value: ImageAndTag
       - uses: helm-template
         config:
-          path: ./main/charts/kargo-demo
+          path: ./main/charts/kargo-helm
           releaseName: kargo-demo
           valuesFiles:
-          - ./main/charts/kargo-demo/stages/prod/values.yaml
+          - ./main/charts/kargo-helm/stages/prod/values.yaml
           outPath: ./manifests
       - uses: git-overwrite
         config:
