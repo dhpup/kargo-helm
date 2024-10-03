@@ -22,7 +22,7 @@ spec:
         # Kargo will update this branch to move new commits from the helm branch
         # and/or new images into this stage
         targetRevision: stage/{{stage}}
-        path: charts/kargo-demo
+        path: charts/kargo-helm
         helm:
           valueFiles:
           - stages/{{stage}}/values.yaml
