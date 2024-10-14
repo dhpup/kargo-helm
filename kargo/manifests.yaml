@@ -130,10 +130,6 @@ spec:
           valuesFiles:
           - ./main/charts/kargo-helm/stages/uat/values.yaml
           outPath: ./manifests
-      - uses: git-overwrite
-        config:
-          inPath: ./manifests
-          outPath: ./out
       - uses: git-commit
         as: commit
         config:
