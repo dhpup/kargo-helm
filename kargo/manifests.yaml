@@ -1,7 +1,7 @@
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
-  name: kargo-demo
+  name: kargo-h
 spec:
   promotionPolicies:
   - stage: test
@@ -12,8 +12,8 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
-  name: kargo-demo
-  namespace: kargo-demo
+  name: kargo-h
+  namespace: kargo-h
 spec:
   subscriptions:
   - git:
@@ -28,12 +28,12 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: test
-  namespace: kargo-demo
+  namespace: kargo-h
 spec:
   requestedFreight:
   - origin:
       kind: Warehouse
-      name: kargo-demo
+      name: kargo-h
     sources:
       direct: true
   promotionTemplate:
@@ -59,7 +59,7 @@ spec:
       - uses: helm-template
         config:
           path: ./main/charts/kargo-helm
-          releaseName: kargo-demo
+          releaseName: kargo-h
           valuesFiles:
           - ./main/charts/kargo-helm/stages/test/values.yaml
           outPath: ./manifests
@@ -80,24 +80,24 @@ spec:
       - uses: argocd-update
         config:
           apps:
-          - name: kargo-demo-test
+          - name: kargo-h-test
             sources:
             - repoURL: https://github.com/dhpup/kargo-helm.git
               desiredCommitFromStep: commit
   verification:
     analysisTemplates:
-    - name: kargo-demo
+    - name: kargo-h
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: uat
-  namespace: kargo-demo
+  namespace: kargo-h
 spec:
   requestedFreight:
   - origin:
       kind: Warehouse
-      name: kargo-demo
+      name: kargo-h
     sources:
       stages:
       - test
@@ -124,7 +124,7 @@ spec:
       - uses: helm-template
         config:
           path: ./main/charts/kargo-helm
-          releaseName: kargo-demo
+          releaseName: kargo-h
           valuesFiles:
           - ./main/charts/kargo-helm/stages/uat/values.yaml
           outPath: ./manifests
@@ -145,24 +145,24 @@ spec:
       - uses: argocd-update
         config:
           apps:
-          - name: kargo-demo-uat
+          - name: kargo-h-uat
             sources:
             - repoURL: https://github.com/dhpup/kargo-helm.git
               desiredCommitFromStep: commit
   verification:
     analysisTemplates:
-    - name: kargo-demo
+    - name: kargo-h
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: prod
-  namespace: kargo-demo
+  namespace: kargo-h
 spec:
   requestedFreight:
   - origin:
       kind: Warehouse
-      name: kargo-demo
+      name: kargo-h
     sources:
       stages:
       - uat
@@ -189,7 +189,7 @@ spec:
       - uses: helm-template
         config:
           path: ./main/charts/kargo-helm
-          releaseName: kargo-demo
+          releaseName: kargo-h
           valuesFiles:
           - ./main/charts/kargo-helm/stages/prod/values.yaml
           outPath: ./manifests
@@ -223,19 +223,19 @@ spec:
       - uses: argocd-update
         config:
           apps:
-          - name: kargo-demo-prod
+          - name: kargo-h-prod
             sources:
             - repoURL: https://github.com/dhpup/kargo-helm.git
               desiredCommitFromStep: wait-for-pr
   verification:
     analysisTemplates:
-    - name: kargo-demo
+    - name: kargo-h
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: kargo-demo
-  namespace: kargo-demo
+  name: kargo-h
+  namespace: kargo-h
 spec:
   metrics:
   - name: test
