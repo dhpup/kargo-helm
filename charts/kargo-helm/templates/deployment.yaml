@@ -15,7 +15,7 @@ spec:
         {{- include "kargo-h.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - name: nginx
+      - name: guestbook
         image: {{ .Values.image.name }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         resources:
