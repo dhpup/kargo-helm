@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "kargo-demo.fullname" . }}
+  name: {{ include "kargo-h.fullname" . }}
   labels:
-    {{- include "kargo-demo.labels" . | nindent 4 }}
+    {{- include "kargo-h.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "kargo-demo.selectorLabels" . | nindent 6 }}
+      {{- include "kargo-h.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "kargo-demo.selectorLabels" . | nindent 8 }}
+        {{- include "kargo-h.selectorLabels" . | nindent 8 }}
     spec:
       containers:
       - name: nginx
