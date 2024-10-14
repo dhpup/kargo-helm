@@ -22,7 +22,6 @@ spec:
       branch: new-helm
   - image:
       repoURL: ghcr.io/dhpup/guestbook # Watch for new versions of this image
-      semverConstraint: ^1.24.0
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
