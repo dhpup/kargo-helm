@@ -67,7 +67,7 @@ spec:
           releaseName: kargo-h
           valuesFiles:
           - ./main/charts/kargo-helm/stages/test/values.yaml
-          outPath: ./manifests
+          outPath: ./out
       - uses: git-commit
         as: commit
         config:
