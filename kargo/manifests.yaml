@@ -15,6 +15,7 @@ metadata:
   name: kargo-h
   namespace: kargo-h
 spec:
+  shard: kargo-agent
   subscriptions:
   - git:
       repoURL: https://github.com/dhpup/kargo-helm.git
@@ -30,6 +31,7 @@ metadata:
   name: test
   namespace: kargo-h
 spec:
+  shard: kargo-agent
   requestedFreight:
   - origin:
       kind: Warehouse
@@ -94,6 +96,7 @@ metadata:
   name: uat
   namespace: kargo-h
 spec:
+  shard: kargo-agent
   requestedFreight:
   - origin:
       kind: Warehouse
@@ -159,6 +162,7 @@ metadata:
   name: prod
   namespace: kargo-h
 spec:
+  shard: kargo-agent
   requestedFreight:
   - origin:
       kind: Warehouse
