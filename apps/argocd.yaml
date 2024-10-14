@@ -14,9 +14,9 @@ spec:
     metadata:
       name: kargo-h-{{stage}}
       annotations:
-        kargo.akuity.io/authorized-stage: kargo-demo:{{stage}}
+        kargo.akuity.io/authorized-stage: kargo-h:{{stage}}
     spec:
-      project: default
+      project: kargo-h
       source:
         repoURL: https://github.com/dhpup/kargo-helm.git
         # Kargo will update this branch to move new commits from the helm branch
@@ -28,7 +28,7 @@ spec:
           - stages/{{stage}}/values.yaml
       destination:
         server: https://kubernetes.default.svc
-        namespace: kargo-demo-{{stage}}
+        namespace: kargo-h-{{stage}}
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
