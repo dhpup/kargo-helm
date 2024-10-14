@@ -78,13 +78,13 @@ spec:
         config:
           path: ./out
           targetBranch: stage/test
-      - uses: argocd-update
-        config:
-          apps:
-          - name: kargo-h-test
-            sources:
-            - repoURL: https://github.com/dhpup/kargo-helm.git
-              desiredCommitFromStep: commit
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: kargo-h-test
+      #       sources:
+      #       - repoURL: https://github.com/dhpup/kargo-helm.git
+      #         desiredCommitFromStep: commit
   verification:
     analysisTemplates:
     - name: kargo-h
