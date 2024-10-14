@@ -27,7 +27,7 @@ spec:
           valueFiles:
           - stages/{{stage}}/values.yaml
       destination:
-        server: https://kubernetes.default.svc
+        name: mac2
         namespace: kargo-h-{{stage}}
       syncPolicy:
         syncOptions:
