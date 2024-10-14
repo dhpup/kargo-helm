@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 image:
-  name: public.ecr.aws/nginx/nginx:placeholder
+  name: ghcr.io/dhpup/guestbook:placeholder
   pullPolicy: IfNotPresent
 
 service:

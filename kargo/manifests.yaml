@@ -21,7 +21,7 @@ spec:
       # Watch this branch instead of main. This is the "trunk" for this example.
       branch: new-helm
   - image:
-      repoURL: public.ecr.aws/nginx/nginx # Watch for new versions of this image
+      repoURL: ghcr.io/dhpup/guestbook # Watch for new versions of this image
       semverConstraint: ^1.24.0
 ---
 apiVersion: kargo.akuity.io/v1alpha1
@@ -53,7 +53,7 @@ spec:
         config:
           path: ./main/charts/kargo-helm/values.yaml
           images:
-          - image: public.ecr.aws/nginx/nginx
+          - image: ghcr.io/dhpup/guestbook
             key: image.name
             value: ImageAndTag
       - uses: helm-template
@@ -118,7 +118,7 @@ spec:
         config:
           path: ./main/charts/kargo-helm/values.yaml
           images:
-          - image: public.ecr.aws/nginx/nginx
+          - image: ghcr.io/dhpup/guestbook
             key: image.name
             value: ImageAndTag
       - uses: helm-template
@@ -183,7 +183,7 @@ spec:
         config:
           path: ./main/charts/kargo-helm/values.yaml
           images:
-          - image: public.ecr.aws/nginx/nginx
+          - image: ghcr.io/dhpup/guestbook
             key: image.name
             value: ImageAndTag
       - uses: helm-template

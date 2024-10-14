@@ -1,2 +1,2 @@
 image:
-  name: public.ecr.aws/nginx/nginx:placeholder
+  name: ghcr.io/dhpup/guestbook:placeholder
