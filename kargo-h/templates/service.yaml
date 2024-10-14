@@ -1,0 +1,21 @@
+---
+# Source: kargo-h/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kargo-h
+  labels:
+    helm.sh/chart: kargo-h-0.1.2
+    app.kubernetes.io/name: kargo-h
+    app.kubernetes.io/instance: kargo-h
+    app.kubernetes.io/version: "0.1.35"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app.kubernetes.io/name: kargo-h
+    app.kubernetes.io/instance: kargo-h
