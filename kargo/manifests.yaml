@@ -50,6 +50,9 @@ spec:
           - branch: stage/test
             create: true
             path: ./out
+      - uses: git-clear
+        config:
+          path: ./out
       - uses: helm-update-image
         as: update-image
         config:
@@ -65,10 +68,6 @@ spec:
           valuesFiles:
           - ./main/charts/kargo-helm/stages/test/values.yaml
           outPath: ./manifests
-      - uses: git-overwrite
-        config:
-          inPath: ./manifests
-          outPath: ./out
       - uses: git-commit
         as: commit
         config:
